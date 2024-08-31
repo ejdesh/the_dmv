@@ -1,4 +1,5 @@
 class Dmv
+  attr_reader :facilities
 
   def initialize
     @facilities = []
@@ -9,8 +10,11 @@ class Dmv
   end
 
   def facilities_offering_service(service)
-    @facilities.find do |facility|
-      facility.services.include?(service)
+    yes = []
+
+    @facilities.each do |facility|
+      yes << facility if facility.services.include?(service)
     end
+    yes.uniq
   end
 end
