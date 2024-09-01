@@ -16,7 +16,23 @@ class Registrant
     @permit
   end
 
+  def written?
+    @license_data[:written]
+  end
+
+  def license?
+    @license_data[:license]
+  end
+
+  def renewed?
+    @license_data[:renewed]
+  end
+
   def earn_permit
     @permit = true
+  end
+
+  def pass_written
+    @license_data[:written] = true
   end
 end

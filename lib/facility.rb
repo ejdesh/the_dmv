@@ -1,3 +1,5 @@
+require 'pry'
+
 class Facility
   attr_reader :name, :address, :phone, :services
 
@@ -10,24 +12,32 @@ class Facility
 
   def add_service(service)
     @services << service
+    @services = @services.uniq
   end
 
   def register
     # ev? plate_type: ev $200
     # antique? plate_tpe: antique $25
-    # register vehicle plate_tpe: regular $100
   end
 
-  def take_written_test
-    # A written test can only be administered to registrants with a permit and who are at least 16 years of age
+  def administer_written_test(registrant)
+    return false unless @services.include?('Written Test')
+    return false unless registrant.age >= 16 && registrant.permit?
+
+    # binding.pry if registrant.age == 15
+
+    registrant.pass_written
   end
 
-  def take_road_test
-    # A road test can only be administered to registrants who have passed the written test
-    # For simplicity’s sake, Registrants who qualify for the road test automatically earn a license
+  def administer_road_test(registrant)
+    return false unless @services.include?('Road Test')
+
+    registrant.take_road_test if registrant.written?
   end
 
-  def renew_license
-    # A license can only be renewed if the registrant has already passed the road test and earned a license
+  def renew_license(registrant)
+    return false unless @services.include?('Renew Drivers License')
+
+    registrant.renew_license if registrant.license?
   end
 end
