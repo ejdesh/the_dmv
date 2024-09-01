@@ -28,6 +28,10 @@ class Registrant
     @license_data[:renewed]
   end
 
+  def earn_license
+    @license_data[:license] = true
+  end
+
   def earn_permit
     @permit = true
   end

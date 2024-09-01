@@ -1,13 +1,20 @@
 require 'pry'
 
 class Facility
-  attr_reader :name, :address, :phone, :services
+  attr_reader   :name,
+                :address,
+                :phone,
+                :services,
+                :registered_vehicles,
+                :collected_fees
 
   def initialize(facility)
     @name = facility[:name]
     @address = facility[:address]
     @phone = facility[:phone]
     @services = []
+    @registered_vehicles = []
+    @collected_fees = 0
   end
 
   def add_service(service)
@@ -15,7 +22,9 @@ class Facility
     @services = @services.uniq
   end
 
-  def register
+  def register(vehicle)
+    @registered_vehicles << vehicle
+    # TODO
     # ev? plate_type: ev $200
     # antique? plate_tpe: antique $25
   end
@@ -30,9 +39,9 @@ class Facility
   end
 
   def administer_road_test(registrant)
-    return false unless @services.include?('Road Test')
+    return false unless @services.include?('Road Test') && registrant.written?
 
-    registrant.take_road_test if registrant.written?
+    registrant.earn_license
   end
 
   def renew_license(registrant)
