@@ -1,5 +1,3 @@
-require 'pry'
-
 class Facility
   attr_reader   :name,
                 :address,
@@ -22,18 +20,30 @@ class Facility
     @services = @services.uniq
   end
 
+  def vehicle_type(vehicle)
+    return :ev if vehicle.electric_vehicle?
+    return :antique if vehicle.antique?
+
+    :regular
+  end
+
+  def collect_fee(vehicle)
+    fee_schedule = { ev: 200, antique: 25, regular: 100 }
+    fee_due = fee_schedule[vehicle_type(vehicle)]
+
+    @collected_fees += fee_due
+  end
+
   def register(vehicle)
+    collect_fee(vehicle)
     @registered_vehicles << vehicle
-    # TODO
-    # ev? plate_type: ev $200
-    # antique? plate_tpe: antique $25
+
+    vehicle
   end
 
   def administer_written_test(registrant)
     return false unless @services.include?('Written Test')
     return false unless registrant.age >= 16 && registrant.permit?
-
-    # binding.pry if registrant.age == 15
 
     registrant.pass_written
   end

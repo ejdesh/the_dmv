@@ -39,4 +39,8 @@ class Registrant
   def pass_written
     @license_data[:written] = true
   end
+
+  def renew_license
+    @license_data[:renewed] = true
+  end
 end
