@@ -6,7 +6,8 @@ class Vehicle
               :make,
               :model,
               :engine,
-              :registration_date
+              :registration_date,
+              :plate_type
 
   def initialize(vehicle_details)
     @vin = vehicle_details[:vin]
@@ -22,5 +23,11 @@ class Vehicle
 
   def electric_vehicle?
     @engine == :ev
+  end
+
+  def get_plate(plate_type)
+    return false unless %i[regular ev antique].include?(plate_type)
+
+    @plate_type = plate_type
   end
 end

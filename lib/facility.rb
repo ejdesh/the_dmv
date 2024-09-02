@@ -1,33 +1,62 @@
 class Facility
-  attr_reader :name, :address, :phone, :services
+  attr_reader   :name,
+                :address,
+                :phone,
+                :services,
+                :registered_vehicles,
+                :collected_fees
 
   def initialize(facility)
     @name = facility[:name]
     @address = facility[:address]
     @phone = facility[:phone]
     @services = []
+    @registered_vehicles = []
+    @collected_fees = 0
   end
 
   def add_service(service)
     @services << service
+    @services = @services.uniq
   end
 
-  def register
-    # ev? plate_type: ev $200
-    # antique? plate_tpe: antique $25
-    # register vehicle plate_tpe: regular $100
+  def vehicle_type(vehicle)
+    return :ev if vehicle.electric_vehicle?
+    return :antique if vehicle.antique?
+
+    :regular
   end
 
-  def take_written_test
-    # A written test can only be administered to registrants with a permit and who are at least 16 years of age
+  def collect_fee(vehicle)
+    fee_schedule = { ev: 200, antique: 25, regular: 100 }
+    fee_due = fee_schedule[vehicle_type(vehicle)]
+
+    @collected_fees += fee_due
   end
 
-  def take_road_test
-    # A road test can only be administered to registrants who have passed the written test
-    # For simplicity’s sake, Registrants who qualify for the road test automatically earn a license
+  def register(vehicle)
+    collect_fee(vehicle)
+    @registered_vehicles << vehicle
+
+    vehicle
   end
 
-  def renew_license
-    # A license can only be renewed if the registrant has already passed the road test and earned a license
+  def administer_written_test(registrant)
+    return false unless @services.include?('Written Test')
+    return false unless registrant.age >= 16 && registrant.permit?
+
+    registrant.pass_written
+  end
+
+  def administer_road_test(registrant)
+    return false unless @services.include?('Road Test') && registrant.written?
+
+    registrant.earn_license
+  end
+
+  def renew_license(registrant)
+    return false unless @services.include?('Renew Drivers License')
+
+    registrant.renew_license if registrant.license?
   end
 end
