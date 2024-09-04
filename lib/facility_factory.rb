@@ -1,22 +1,36 @@
+require 'pry'
+
 class FacilityFactory
-  def create_factories(co_dmv_office_locations)
+  def get_address(facility_info)
+    [facility_info[:address_li],
+     facility_info[:address__1],
+     facility_info[:city],
+     facility_info[:state],
+     facility_info[:zip]].compact.join(' ')
+  end
+
+  def get_name(facility_info)
+    [facility_info[:dmv_office]].compact.join
+  end
+
+  def get_phone(facility_info)
+    [facility_info[:phone]].compact.join
+  end
+
+  def create_factory(co_dmv_office_locations)
     # DmvDataService.new.co_dmv_office_locations
     factory = []
 
-    # @name = f[:dmv_office]
-    # @address = facility[:address]
-    # @phone = facility[:phone]
-    # @services = []
-    # @registered_vehicles = []
-    # @collected_fees = 0
+    co_dmv_office_locations.each do |facility_info|
+      factory_details = { name: get_name(facility_info),
+                          address: get_address(facility_info),
+                          phone: get_phone(facility_info) }
+      # services: f[:services_p]
+      # binding.pry
 
-    co_dmv_office_locations.each do |f|
-      vehicle_details = { vin: f[:dmv_office] }
-      puts f[:vin]
-
-      # factory << Vehicle.new(vehicle_details)
+      factory << Facility.new(factory_details)
     end
 
-    # factory
+    factory
   end
 end
