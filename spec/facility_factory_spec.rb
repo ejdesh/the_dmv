@@ -3,14 +3,15 @@ require 'spec_helper'
 RSpec.describe FacilityFactory do
   before(:all) do
     @factory = FacilityFactory.new
-    @co_dmv_office_locations = DmvDataService.new.co_dmv_office_locations
+    # @dmv_office_locations = DmvDataService.new.co_dmv_office_locations
+    @dmv_office_locations = DmvDataService.new.ny_dmv_office_locations
     @facility_info = { address_li: '123 3rd St',
                        address__1: 'Suite 110',
                        city: 'San Jo',
-                       state: 'Cali',
+                       state: 'CO',
                        dmv_office: 'Always Busy North',
                        phone: '867-5309',
-                       zip: 93_402 }
+                       zip: '93402' }
   end
 
   describe '#initialize' do
@@ -21,7 +22,7 @@ RSpec.describe FacilityFactory do
 
   describe '#create_factory' do
     it 'can return facilities' do
-      facilities = @factory.create_factory(@co_dmv_office_locations)
+      facilities = @factory.create_factory(@dmv_office_locations)
       expect(facilities.first).to be_a(Facility)
       expect(facilities.last).to be_a(Facility)
     end
@@ -29,7 +30,7 @@ RSpec.describe FacilityFactory do
 
   describe '#get_address' do
     it 'can return an address' do
-      address = '123 3rd St Suite 110 San Jo Cali 93402'
+      address = '123 3rd St Suite 110 San Jo CO 93402'
       expect(@factory.get_address(@facility_info)).to eq(address)
     end
   end
